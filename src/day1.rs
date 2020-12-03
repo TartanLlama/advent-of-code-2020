@@ -8,11 +8,11 @@ fn parse_input(input: &str) -> Vec<i32> {
          .collect()
 }
 
-fn combination_summing_to_n(input: &[i32], k_combinations: usize, n: i32) -> Option<Vec<i32>> {
+fn combination_summing_to_n(input: &[i32], k_combinations: usize, n: i32) -> Option<(i32,i32)> {
     input.iter()
-         .copied()
-         .combinations(k_combinations)
-         .find(|v| v.iter().sum::<i32>() == n)
+         .enumerate()
+         .flat_map(|(i,&a)| input.iter().skip(i).map(move |&b| (a,b)))
+         .find(|(a,b)| a+b == n)
 }
 
 #[cfg(test)]
@@ -22,7 +22,7 @@ mod tests {
     fn common_solution(k_combinations: usize) {
         let input = parse_input(include_str!("../input/day1.txt"));
         match combination_summing_to_n(&input, k_combinations, 2020) {
-            Some(s) => println!("Solution: {}", s.iter().product::<i32>()),
+            Some((a,b)) => println!("Solution: {}", a*b),
             None => println!("No solution found"),
         }
     }
@@ -32,8 +32,5 @@ mod tests {
         common_solution(2)
     }
 
-    #[test]
-    fn part_2() {
-        common_solution(3)
-    }
+
 }
