@@ -2,15 +2,17 @@ fn count_trees_on_slope(
     lines: &[&str], 
     (mut slope_down, mut slope_right): (usize, usize)
 ) -> i64 {
-    let steps = (0..)
-                                    .step_by(slope_right)
-                                    .map(|i| i % lines[0].len());
+    let mut trees = 0;
+    let (mut i, mut j) = (0,0);
 
-    lines.iter()
-         .step_by(slope_down)
-         .zip(steps)
-         .map(|(line, i)| (line.chars().nth(i).unwrap() == '#') as i64)
-         .sum()
+    while i < lines.len() {
+        if lines[i].chars().nth(j).unwrap() == '#' {
+            trees += 1;
+        }
+        i += slope_down;
+        j = (j + slope_right) % lines[0].len();
+    }
+    trees  
 }
 
 #[cfg(test)]
@@ -27,7 +29,7 @@ mod tests {
     #[test]
     fn part2() {
         let lines: Vec<&str> = include_str!("../input/day3.txt").lines().collect();
-        let solution: i64 = vec![(1,1), (1,3), (1,5), (1,7), (2,1)]
+        let solution: i64 = [(1,1), (1,3), (1,5), (1,7), (2,1)]
                            .iter()
                            .map(|&inc| count_trees_on_slope(&lines, inc))
                            .product();

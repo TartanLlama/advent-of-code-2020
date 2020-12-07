@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 itertools = "0.9"
 regex = "1"
+alga = "0.9.3"
