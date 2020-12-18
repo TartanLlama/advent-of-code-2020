@@ -1,7 +1,3 @@
-use std::fs::read_to_string;
-use std::path::Path;
-use itertools::Itertools;
-
 fn parse_input(input: &str) -> Vec<i32> {
     input.lines()
          .filter_map(|n| n.parse::<i32>().ok())
