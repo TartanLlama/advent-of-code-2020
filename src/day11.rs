@@ -9,7 +9,7 @@ fn run_state_part1(state: &mut Vec<Vec<Cell>>) -> bool {
     let mut adjacent = vec![vec![0; state[0].len()]; state.len()];
 
     for (i, line) in state.iter().enumerate() {
-        for (j, cell) in line.iter().enumerate() {
+        for (j, _) in line.iter().enumerate() {
             let ii = i as i64;
             let ij = j as i64;
             let occupied_neighbours = [
@@ -56,7 +56,7 @@ fn run_state_part2(state: &mut Vec<Vec<Cell>>) -> bool {
     let mut adjacent = vec![vec![0; state[0].len()]; state.len()];
 
     for (i, line) in state.iter().enumerate() {
-        for (j, cell) in line.iter().enumerate() {
+        for (j, _) in line.iter().enumerate() {
             let ii = i as i64;
             let ij = j as i64;
             let occupied_neighbours = [

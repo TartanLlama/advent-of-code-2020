@@ -1,5 +1,4 @@
 use num_complex::Complex;
-use std::collections::HashMap;
 use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug)]
@@ -113,7 +112,6 @@ mod tests {
             };
         }
 
-        let solution = ship.re.abs() + ship.im.abs();
         println!("Solution: {}", ship.re.abs() + ship.im.abs());
     }
 }

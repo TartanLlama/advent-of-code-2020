@@ -31,7 +31,7 @@ mod tests {
 
     #[test]
     fn part1() {
-        let mut entries = parse_input(include_str!("../input/day7.txt"));
+        let entries = parse_input(include_str!("../input/day7.txt"));
 
         let mut queue = BinaryHeap::new();
         queue.push("shinygold".to_owned());

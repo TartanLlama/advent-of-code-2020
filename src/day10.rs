@@ -1,38 +1,5 @@
-/// A function type that takes its own type as an input is an infinite recursive type.
-/// We introduce the "Apply" trait, which will allow us to have an input with the same type as self, and break the recursion.
-/// The input is going to be a trait object that implements the desired function in the interface.
-trait Apply<T, R> {
-    fn apply(&self, f: &dyn Apply<T, R>, t: T) -> R;
-}
-
-/// If we were to pass in self as f, we get:
-/// λf.λt.sft
-/// => λs.λt.sst [s/f]
-/// => λs.ss
-impl<T, R, F> Apply<T, R> for F
-where
-    F: Fn(&dyn Apply<T, R>, T) -> R,
-{
-    fn apply(&self, f: &dyn Apply<T, R>, t: T) -> R {
-        self(f, t)
-    }
-}
-
-/// (λt(λx.(λy.xxy))(λx.(λy.f(λz.xxz)y)))t
-/// => (λx.xx)(λx.f(xx))
-/// => Yf
-fn y<T, R>(f: impl Fn(&dyn Fn(T) -> R, T) -> R) -> impl Fn(T) -> R {
-    move |t| {
-        (&|x: &dyn Apply<T, R>, y| x.apply(x, y))(
-            &|x: &dyn Apply<T, R>, y| f(&|z| x.apply(x, z), y),
-            t,
-        )
-    }
-}
-
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn part1() {

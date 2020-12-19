@@ -1,5 +1,4 @@
 use std::collections::{HashSet,HashMap};
-use itertools::Itertools;
 
 fn part1_step(active: &HashSet<(i8,i8,i8)>) -> HashSet<(i8,i8,i8)> {
     let mut counts = HashMap::new();

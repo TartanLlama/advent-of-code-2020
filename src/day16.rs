@@ -91,7 +91,7 @@ mod tests {
             })
             .collect();
 
-        let mut rule_possibilities: HashMap<String, Vec<usize>> = input
+        let rule_possibilities: HashMap<String, Vec<usize>> = input
             .rules
             .iter()
             .map(|rule| {

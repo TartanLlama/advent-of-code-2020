@@ -1,4 +1,4 @@
-use dynasmrt::{dynasm, relocations::Relocation, AssemblyOffset, DynasmApi, DynasmLabelApi};
+use dynasmrt::{dynasm, AssemblyOffset, DynasmApi, DynasmLabelApi};
 use winapi::um::memoryapi::VirtualProtect;
 use winapi::um::winnt::PAGE_EXECUTE_READWRITE;
 
@@ -19,7 +19,7 @@ mod tests {
         dynasm!(ops; xor rax, rax);
 
         //We'll mark the start of every source instruction with a label so we can jump between them
-        let mut instr_labels: Vec<_> = (0..lines.len()).map(|_| ops.new_dynamic_label()).collect();
+        let instr_labels: Vec<_> = (0..lines.len()).map(|_| ops.new_dynamic_label()).collect();
 
         for (line_num, line) in lines.iter().enumerate() {
             let (opcode, operand_str) = line.split_at(3);
@@ -27,7 +27,6 @@ mod tests {
 
             //Output the label for this instruction
             dynasm!(ops; =>instr_labels[line_num]);
-            let loc = ops.offset();
 
             //HERE BE DRAGONS
             //This instruction modifies itself by scribbling over its opcode with 0xc3 (ret)

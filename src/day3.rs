@@ -1,6 +1,6 @@
 fn count_trees_on_slope(
     lines: &[&str], 
-    (mut slope_down, mut slope_right): (usize, usize)
+    (slope_down, slope_right): (usize, usize)
 ) -> i64 {
     let mut trees = 0;
     let (mut i, mut j) = (0,0);

@@ -13,7 +13,7 @@ fn find_first_target_without_sum(input: &[i64]) -> i64 {
 }
 
 fn find_range_summing_to(input: &[i64], target: i64) -> Vec<i64> {
-    for start in (0..input.len()) {
+    for start in 0..input.len() {
         for length in 2.. {
             let sum: i64 = input[start..].iter().take(length).sum();
             if sum == target {

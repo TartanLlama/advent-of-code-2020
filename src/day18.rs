@@ -1,7 +1,4 @@
 
-use cranelift::prelude::*;
-use cranelift_module::{DataContext, Linkage, Module};
-use cranelift_simplejit::{SimpleJITBuilder, SimpleJITModule};
 #[derive(Debug, PartialEq, Clone, Copy)]
 enum Token {
     Lparen,
@@ -51,44 +48,45 @@ enum AstNode {
 }
 
 fn parse_expr<T: Iterator<Item = Token>>(iter: &mut std::iter::Peekable<T>, min_bp: u8) -> AstNode {
-    let tok = iter.next().unwrap();
-
-    let mut lhs = match tok {
+    //First we parse the left-hand expr: an int or parenthesised expr
+    let mut lhs = match iter.next().unwrap() {
         Token::Int(i) => AstNode::Int(i),
         Token::Lparen => {
             let lhs = parse_expr(iter, 0);
             assert_eq!(iter.next().unwrap(), Token::Rparen);
             lhs
-        },
+        }
         _ => panic!("ohno"),
     };
 
+    //Now we keep building expressions until we find an operator
+    //lower binding power
     loop {
         let op = match iter.peek().unwrap() {
             Token::Eof => break,
             Token::Rparen => break,
             Token::Lparen => break,
-            op@ Token::Add | op@ Token::Mul => *op,
+            op @ Token::Add | op @ Token::Mul => *op,
             t => panic!("bad token: {:?}", t),
         };
 
         let (l_bp, r_bp) = binding_power(op);
-        if l_bp < min_bp { 
+        if l_bp < min_bp {
             break;
         }
         iter.next();
 
-        let rhs = parse_expr(iter,r_bp);
+        let rhs = parse_expr(iter, r_bp);
         lhs = AstNode::Binop(Box::new(lhs), op, Box::new(rhs));
     }
 
     lhs
 }
 
-fn binding_power(tok: Token) -> (u8,u8) {
+fn binding_power(tok: Token) -> (u8, u8) {
     match tok {
-        Token::Mul => (1,2),
-        Token::Add => (3,4),
+        Token::Mul => (1, 2),
+        Token::Add => (3, 4),
         _ => panic!("onno"),
     }
 }
@@ -120,7 +118,7 @@ impl JIT {
         let int = types::I32;
 
         self.ctx.func.signature.returns.push(AbiParam::new(int));
-        
+
         let mut builder = FunctionBuilder::new(&mut self.ctx.func, &mut self.builder_context);
 
         let entry_block = builder.create_block();
@@ -161,8 +159,9 @@ mod tests {
     #[test]
     fn part2() {
         let solution: u64 = include_str!("../input/day18.txt")
-        .lines()
-        .map(|line| eval(&parse(&lex(line)))).sum();
+            .lines()
+            .map(|line| eval(&parse(&lex(line))))
+            .sum();
         println!("Solution: {}", solution);
     }
 }
